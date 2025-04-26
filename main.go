@@ -78,11 +78,11 @@ func adviceByDMYHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.
 		Your advice based on date of birth: " + date + "/" + month + "/" + year
 		---
 		Here is your lucky number: %v
-		Desction: %s
+		Description: %s
 		Here is your avoid number: %v
-		Desction: %s
+		Description: %s
 		Here is your avoid character: %v
-		Desction: %s
+		Description: %s
 	`
 
 	return mcp.NewToolResultText(fmt.Sprintf(advice, result.LuckyNum, result.LuckyNumDesc, result.AvoidNum, result.AvoidNumDesc, result.AvoidChar, result.AvoidCharDesc)), nil
