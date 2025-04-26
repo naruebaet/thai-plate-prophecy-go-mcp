@@ -1,0 +1,9 @@
+{
+    "servers": {
+        "my-mcp-server-bec72cfa": {
+            "type": "stdio",
+            "command": "thai-plate-prophecy-mcp",
+            "args": []
+        }
+    }
+}
