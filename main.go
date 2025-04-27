@@ -1,14 +1,12 @@
 package main
 
 import (
-	"context"
-	"errors"
 	"flag"
 	"fmt"
+	"thai-plate-prophecy-mcp/handler"
 
 	"github.com/mark3labs/mcp-go/mcp"
 	"github.com/mark3labs/mcp-go/server"
-	tpp "github.com/naruebaet/thai-plate-prophecy-go/v1"
 )
 
 func main() {
@@ -19,12 +17,13 @@ func main() {
 	// Create a new server instance
 	mcpServer := server.NewMCPServer(
 		"Thai plate prophecy mcp",
-		"1.0.0",
+		"1.0.1",
 		server.WithResourceCapabilities(true, true),
 		server.WithLogging(),
 		server.WithRecovery(),
 	)
 
+	// v1.AdviceByDMY()
 	// Create a new tool for getting advice by date of birth
 	adviceByDMY := mcp.NewTool(
 		"advice_by_dmy",
@@ -43,8 +42,38 @@ func main() {
 		),
 	)
 
+	// v1.AdviceByWeekDay()
+	// Create a new tool for getting advice by day of the week
+	adviceByDayOfWeek := mcp.NewTool(
+		"advice_by_day_of_week",
+		mcp.WithDescription("Get advice by day of the week"),
+		mcp.WithString("day",
+			mcp.Required(),
+			mcp.Description("day number of birth day"),
+		),
+	)
+
+	// Create a new tool for getting advice for all days of the week
+	adviceAllDays := mcp.NewTool(
+		"advice_all_days",
+		mcp.WithDescription("Get advice for all days of the week"),
+	)
+
+	// v1.AdviceByPlateData()
+	// Create a new tool for getting advice by Plate number
+	adviceByPlate := mcp.NewTool("advice_by_plate",
+		mcp.WithDescription("Get advice by plate number"),
+		mcp.WithString("plate",
+			mcp.Required(),
+			mcp.Description("plate number, example: 1กก 1234"),
+		),
+	)
+
 	// Add the tool to the server
-	mcpServer.AddTool(adviceByDMY, adviceByDMYHandler)
+	mcpServer.AddTool(adviceByDMY, handler.AdviceByDMYHandler)
+	mcpServer.AddTool(adviceByDayOfWeek, handler.AdviceByDayOfWeekHandler)
+	mcpServer.AddTool(adviceAllDays, handler.AdviceAllDaysHandler)
+	mcpServer.AddTool(adviceByPlate, handler.AdviceByPlateHandler)
 
 	// Start the server
 	if *sseMode {
@@ -60,30 +89,4 @@ func main() {
 		}
 	}
 
-}
-
-func adviceByDMYHandler(ctx context.Context, request mcp.CallToolRequest) (*mcp.CallToolResult, error) {
-	// Implement the logic to get advice by date of birth
-	// This is a placeholder implementation
-	date := request.Params.Arguments["date"].(string)
-	month := request.Params.Arguments["month"].(string)
-	year := request.Params.Arguments["year"].(string)
-
-	result, err := tpp.AdviceByDMY(date, month, year)
-	if err != nil {
-		return nil, errors.New(err.Error())
-	}
-
-	advice := `
-		Your advice based on date of birth: " + date + "/" + month + "/" + year
-		---
-		Here is your lucky number: %v
-		Description: %s
-		Here is your avoid number: %v
-		Description: %s
-		Here is your avoid character: %v
-		Description: %s
-	`
-
-	return mcp.NewToolResultText(fmt.Sprintf(advice, result.LuckyNum, result.LuckyNumDesc, result.AvoidNum, result.AvoidNumDesc, result.AvoidChar, result.AvoidCharDesc)), nil
 }
