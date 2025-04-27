@@ -88,11 +88,7 @@ $ GOOS=linux GOARCH=amd64 go build -o thai-plate-prophecy-mcp-linux
 $ GOOS=windows GOARCH=amd64 go build -o thai-plate-prophecy-mcp.exe
 ```
 
-### Example
-
-![Thai Plate Prophecy MCP Example](./Screenshot%202568-04-27%20at%2002.40.58.png)
-then
-![Thai Plate Prophecy MCP Example](./Screenshot%202568-04-27%20at%2002.41.57.png)
-
 ### Support me coffee
-![Support me](./bmc_qr.png)
+[Buy me a coffee](https://www.buymeacoffee.com/alpakalab)
+
+Crafted by : [Alpaka LAB](https://alpakalab.com)
